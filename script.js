@@ -62,3 +62,23 @@ function spawnParticle() {
   document.body.appendChild(p);
   setTimeout(() => p.remove(), 3000);
 }
+
+/* ============================================================
+   MUSIQUE PERSISTANTE
+   ============================================================ */
+(function() {
+  // Sur toutes les pages sauf index, injecte l'iframe et relance
+  if (!document.getElementById('music-frame') &&
+       sessionStorage.getItem('sw_music_playing') === '1') {
+
+    const frame = document.createElement('iframe');
+    frame.id  = 'music-frame';
+    frame.src = 'music-frame.html';
+    frame.style.cssText = 'display:none;width:0;height:0;border:none;';
+    frame.allow = 'autoplay';
+    frame.onload = () => {
+      frame.contentWindow.postMessage('play', '*');
+    };
+    document.body.appendChild(frame);
+  }
+})();
