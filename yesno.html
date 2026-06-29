@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mission Secrète 🌌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="stars-container"></div>
+<div class="hyperspace-overlay" id="hyperspace"></div>
+
+<div class="page active" id="page-yesno">
+  <div class="saber-top"></div>
+  <div class="yesno-title">Padawan, acceptes-tu<br>cette mission secrète ? 🌌</div>
+  <div class="yesno-subtitle">"Il n'y a pas d'essai. Fais-le, ou ne fais pas." – Yoda</div>
+
+  <div class="bb8-container">
+    <svg class="bb8" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="65" r="30" fill="#F5A623" stroke="#E8921A" stroke-width="2"/>
+      <path d="M15 65 Q40 50 65 65" stroke="#E8921A" stroke-width="2" fill="none"/>
+      <path d="M12 72 Q40 58 68 72" stroke="#E8921A" stroke-width="1.5" fill="none"/>
+      <circle cx="27" cy="62" r="8" fill="#FF6EC7" stroke="#E8921A" stroke-width="1.5"/>
+      <circle cx="50" cy="73" r="5" fill="#4FC3F7" stroke="#E8921A" stroke-width="1.5"/>
+      <ellipse cx="40" cy="28" rx="22" ry="18" fill="#DDD" stroke="#AAA" stroke-width="2"/>
+      <rect x="18" y="25" width="44" height="4" rx="2" fill="#333"/>
+      <circle cx="34" cy="22" r="7" fill="#111"/>
+      <circle cx="34" cy="22" r="5" fill="#222"/>
+      <circle cx="34" cy="22" r="3" fill="#FF6EC7"/>
+      <circle cx="32" cy="20" r="1" fill="white"/>
+    </svg>
+  </div>
+
+  <div id="big-yes">OUI ! 💚</div>
+
+  <div class="btn-area" id="btn-area">
+    <button class="btn-yes" id="btn-yes" onclick="handleYes()">OUI ✨</button>
+    <button class="btn-no" id="btn-no" onclick="handleNo()">non...</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+  let noClickCount = 0;
+
+  function handleYes() {
+    for (let i = 0; i < 20; i++) spawnParticle();
+    document.getElementById('btn-area').style.display = 'none';
+    document.querySelector('.bb8-container').style.display = 'none';
+    const bigYes = document.getElementById('big-yes');
+    bigYes.style.display = 'block';
+    setTimeout(() => navigateTo('activities.html'), 1800);
+  }
+
+  function handleNo() {
+    noClickCount++;
+    const btn    = document.getElementById('btn-no');
+    const yesBtn = document.getElementById('btn-yes');
+
+    if (noClickCount === 1) {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      btn.style.position   = 'fixed';
+      btn.style.left       = (Math.random() * (vw - 120)) + 'px';
+      btn.style.top        = (Math.random() * (vh - 60))  + 'px';
+      btn.style.transition = 'all 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+
+    } else if (noClickCount === 2) {
+      btn.style.transform = 'scale(0.5)';
+      btn.style.opacity   = '0.4';
+      btn.style.fontSize  = '0.7rem';
+      yesBtn.style.transform  = 'scale(1.4)';
+      yesBtn.style.fontSize   = '1.6rem';
+      yesBtn.style.boxShadow  = '0 0 50px rgba(105,240,174,0.9)';
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      btn.style.left = (Math.random() * (vw - 80)) + 'px';
+      btn.style.top  = (Math.random() * (vh - 50)) + 'px';
+
+    } else {
+      btn.style.opacity       = '0';
+      btn.style.transform     = 'scale(0)';
+      btn.style.pointerEvents = 'none';
+      yesBtn.style.transform  = 'scale(2.2)';
+      yesBtn.style.fontSize   = '2rem';
+      yesBtn.style.boxShadow  = '0 0 80px rgba(105,240,174,1), 0 0 160px rgba(105,240,174,0.5)';
+    }
+  }
+</script>
+</body>
+</html>

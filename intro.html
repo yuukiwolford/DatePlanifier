@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Date Awakens 🌌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="stars-container"></div>
+<div class="hyperspace-overlay" id="hyperspace"></div>
+
+<div class="page active" id="page-intro">
+  <div class="star-wars-logo">✦ THE DATE AWAKENS ✦</div>
+  <div class="crawl-wrapper">
+    <div class="crawl-text" id="crawl-text">
+      <p class="crawl-sub">Épisode I</p>
+      <p class="crawl-title">Une Proposition Galactique</p>
+      <p class="crawl-body">
+        Dans une galaxie très très lointaine,<br>
+        un Padawan épris de toi prépare<br>
+        sa mission la plus importante...<br><br>
+        Les étoiles s'alignent. Les sabres laser<br>
+        brillent d'espoir. Même BB-8 s'agite<br>
+        d'impatience.<br><br>
+        Car cette mission n'est pas de tout repos :<br>
+        il s'agit de passer une journée parfaite<br>
+        avec toi, jeune Jedi. 💫<br><br>
+        Le Conseil te demande de bien vouloir<br>
+        examiner cette humble invitation...<br><br>
+        Que la Force soit avec nous. ❤️<br><br><br><br>
+        JE T'AIME HEHEHEHE
+      </p>
+    </div>
+  </div>
+  <button class="skip-btn" onclick="navigateTo('yesno.html')">PASSER ›</button>
+  <button class="next-btn" id="next-btn" onclick="navigateTo('yesno.html')">SUIVANT ›</button>
+</div>
+
+<script src="script.js"></script>
+<script>
+  document.getElementById('crawl-text').addEventListener('animationend', () => {
+    document.getElementById('next-btn').classList.add('visible');
+    document.querySelector('.skip-btn').style.display = 'none';
+  });
+</script>
+</body>
+</html>

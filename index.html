@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Une Mission Secrète t'attend... 🌌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<audio id="sw-music" loop>
+  <source src="https://archive.org/download/tvtunes_4617/Star%20Wars.mp3" type="audio/mp3">
+</audio>
+
+<div id="stars-container"></div>
+<div class="hyperspace-overlay" id="hyperspace"></div>
+
+<div class="page active" id="page-splash">
+  <div class="star-wars-logo">✦ STAR WARS ✦</div>
+  <button onclick="launchSite()" class="launch-btn">
+    ▶ COMMENCER LA MISSION
+  </button>
+  <p class="sound-hint">🔊 ACTIVE TON SON</p>
+</div>
+
+<script src="script.js"></script>
+<script>
+  function launchSite() {
+    const music = document.getElementById('sw-music');
+    music.volume = 0.4;
+    music.play();
+    navigateTo('intro.html');
+  }
+</script>
+</body>
+</html>

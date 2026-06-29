@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mission Acceptée ! 🎉</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="stars-container"></div>
+<div class="hyperspace-overlay" id="hyperspace"></div>
+
+<div class="page active" id="page-confirm">
+  <div class="confirm-icon">🎉</div>
+  <div class="confirm-title">Mission Acceptée !<br>Que la Force soit avec nous !</div>
+  <div class="saber-divider"></div>
+  <div class="confirm-summary" id="confirm-summary"></div>
+  <a href="#" id="gcal-link" class="gcal-btn" target="_blank">
+    📅 Ajouter à Google Agenda
+  </a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init("ce8RYaio3azsyABRj");</script>
+<script src="script.js"></script>
+<script>
+  // Récupère les données depuis localStorage
+  const selectedActivities = JSON.parse(localStorage.getItem('sw_activities') || '[]');
+  const dateStr            = localStorage.getItem('sw_date');
+  const timeStr            = localStorage.getItem('sw_time') || '14:00';
+
+  if (!dateStr) {
+    // Si on arrive ici sans données, retour au début
+    window.location.href = 'index.html';
+  } else {
+    buildConfirmPage(dateStr, timeStr);
+  }
+
+  function buildConfirmPage(dateStr, timeStr) {
+    const [y, m, d]  = dateStr.split('-').map(Number);
+    const dateObj    = new Date(y, m - 1, d);
+    const options    = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const dateFmt    = dateObj.toLocaleDateString('fr-FR', options);
+    const [h, min]   = timeStr.split(':');
+    const timeFmt    = `${h}h${min}`;
+
+    document.getElementById('confirm-summary').innerHTML = `
+      <div class="confirm-detail">📅 <strong>DATE :</strong> ${dateFmt}</div>
+      <div class="confirm-detail">⏰ <strong>HEURE :</strong> ${timeFmt}</div>
+      <div class="confirm-detail">🎯 <strong>ACTIVITÉS :</strong> ${selectedActivities.join(', ') || 'Aucune'}</div>
+    `;
+
+    // Lien Google Agenda
+    const startDT = dateStr.replace(/-/g, '') + 'T' + timeStr.replace(':', '') + '00';
+    const endDate = new Date(dateObj.getTime() + 3 * 60 * 60 * 1000);
+    const endDT   = endDate.toISOString().replace(/[-:]/g, '').split('.')[0];
+    const title   = encodeURIComponent('Notre Date Galactique');
+    const details = encodeURIComponent('Activites : ' + selectedActivities.join(', '));
+    const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDT}/${endDT}&details=${details}`;
+
+    const gcalBtn = document.getElementById('gcal-link');
+    gcalBtn.href    = gcalUrl;
+    gcalBtn.onclick = e => { e.preventDefault(); window.open(gcalUrl, '_blank'); };
+
+    // Email
+    emailjs.send("service_jwd5z88", "template_i3r7i8i", {
+      date:      dateFmt,
+      heure:     timeFmt,
+      activites: selectedActivities.join(', ')
+    });
+
+    // Confettis
+    for (let i = 0; i < 30; i++) setTimeout(() => spawnParticle(), i * 80);
+
+    // Nettoie le localStorage après confirmation
+    localStorage.removeItem('sw_activities');
+    localStorage.removeItem('sw_custom_activities');
+    localStorage.removeItem('sw_date');
+    localStorage.removeItem('sw_time');
+  }
+</script>
+</body>
+</html>

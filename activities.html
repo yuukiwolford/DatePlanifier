@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choisir la Mission 🎯</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="stars-container"></div>
+<div class="hyperspace-overlay" id="hyperspace"></div>
+
+<div class="page active" id="page-activities" style="overflow-y:auto;">
+  <div class="activities-title">Choisissez votre mission, Padawan ! 🎯</div>
+  <div class="activities-sub">Sélectionne tout ce qui t'attire (au moins 1)</div>
+  <div class="saber-divider"></div>
+  <div class="pinterest-grid" id="activities-grid"></div>
+
+  <div class="add-form-inline" id="add-form">
+    <div>
+      <label>EMOJI</label>
+      <input type="text" id="new-emoji" placeholder="🚀" maxlength="2">
+    </div>
+    <div>
+      <label>NOM DE L'ACTIVITÉ</label>
+      <input type="text" id="new-label" placeholder="Karaoké">
+    </div>
+    <button class="continue-btn visible" onclick="addCustomActivity()" style="margin-top:0; padding:0.7rem 1.5rem;">
+      Ajouter ✨
+    </button>
+  </div>
+
+  <button class="continue-btn" id="continue-activities" onclick="confirmActivities()">
+    Confirmer la mission →
+  </button>
+</div>
+
+<script src="script.js"></script>
+<script>
+  // Charge les activités sauvegardées si retour en arrière
+  let selectedActivities = JSON.parse(localStorage.getItem('sw_activities') || '[]');
+
+  const activities = [
+    { emoji: '🎬', label: 'Ciné' },
+    { emoji: '🍕', label: 'Restaurant' },
+    { emoji: '🎢', label: "Parc d'attraction" },
+    { emoji: '🌳', label: 'Pique-nique' },
+    { emoji: '🎭', label: 'Spectacle' },
+    { emoji: '🎮', label: 'Jeux vidéo' },
+    { emoji: '🏛️', label: 'Musée' },
+    { emoji: '🍦', label: 'Glaces' },
+    { emoji: '🚵', label: 'Aventure' },
+    { emoji: '🧁', label: 'Pâtisserie' },
+    { emoji: '🌆', label: 'Balade en ville' },
+    { emoji: '🎠', label: 'Fête foraine' },
+    { emoji: '🎳', label: 'Bowling' },
+    { emoji: '🎨', label: 'Atelier créatif' },
+    { emoji: '🌅', label: 'Coucher de soleil' },
+    { emoji: '🎵', label: 'Concert' },
+    { emoji: '🛶', label: 'Bateau' },
+    { emoji: '🌮', label: 'Food tour' },
+  ];
+
+  // Charge aussi les activités custom sauvegardées
+  const customActivities = JSON.parse(localStorage.getItem('sw_custom_activities') || '[]');
+  customActivities.forEach(a => activities.push(a));
+
+  function renderActivityCards() {
+    const grid = document.getElementById('activities-grid');
+    const existing = document.getElementById('add-card');
+    if (existing) existing.remove();
+
+    activities.forEach(act => {
+      if (document.querySelector(`[data-label="${act.label}"]`)) return;
+      const card = document.createElement('div');
+      card.className = 'activity-card';
+      card.dataset.label = act.label;
+      card.innerHTML = `
+        <span class="activity-emoji">${act.emoji}</span>
+        <span class="activity-label">${act.label}</span>
+      `;
+      // Restaure la sélection
+      if (selectedActivities.includes(act.label)) card.classList.add('selected');
+      card.addEventListener('click', () => toggleActivity(act.label, card));
+      grid.appendChild(card);
+    });
+
+    // Carte "+"
+    const addCard = document.createElement('div');
+    addCard.className = 'activity-add-card';
+    addCard.id = 'add-card';
+    addCard.innerHTML = `
+      <span style="font-size:2rem; color:var(--gold);">＋</span>
+      <span style="font-size:0.8rem; color:var(--gold); font-weight:600;">Créer</span>
+    `;
+    addCard.addEventListener('click', () => {
+      const form = document.getElementById('add-form');
+      form.classList.toggle('visible');
+      if (form.classList.contains('visible')) document.getElementById('new-emoji').focus();
+    });
+    grid.appendChild(addCard);
+
+    updateContinueBtn();
+  }
+
+  function toggleActivity(label, card) {
+    const idx = selectedActivities.indexOf(label);
+    if (idx === -1) {
+      selectedActivities.push(label);
+      card.classList.add('selected');
+      spawnParticle();
+    } else {
+      selectedActivities.splice(idx, 1);
+      card.classList.remove('selected');
+    }
+    updateContinueBtn();
+  }
+
+  function updateContinueBtn() {
+    const btn = document.getElementById('continue-activities');
+    btn.classList.toggle('visible', selectedActivities.length > 0);
+  }
+
+  function addCustomActivity() {
+    const emoji = document.getElementById('new-emoji').value.trim() || '⭐';
+    const label = document.getElementById('new-label').value.trim();
+    if (!label) { alert('Donne un nom à ton activité, Padawan ! 🌌'); return; }
+
+    const newAct = { emoji, label };
+    activities.push(newAct);
+
+    // Sauvegarde les custom activities
+    const saved = JSON.parse(localStorage.getItem('sw_custom_activities') || '[]');
+    saved.push(newAct);
+    localStorage.setItem('sw_custom_activities', JSON.stringify(saved));
+
+    document.getElementById('new-emoji').value = '';
+    document.getElementById('new-label').value = '';
+    document.getElementById('add-form').classList.remove('visible');
+
+    renderActivityCards();
+
+    const newCard = document.querySelector(`[data-label="${label}"]`);
+    if (newCard) {
+      toggleActivity(label, newCard);
+      newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    spawnParticle();
+  }
+
+  function confirmActivities() {
+    // Sauvegarde dans localStorage avant de changer de page
+    localStorage.setItem('sw_activities', JSON.stringify(selectedActivities));
+    navigateTo('date.html');
+  }
+
+  // Init
+  renderActivityCards();
+</script>
+</body>
+</html>
