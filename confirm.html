@@ -88,10 +88,16 @@
     document.getElementById('gcal-link').href = gcalUrl;
 
     // Email
+    const detailsEmail = selectedActivities.map(label => {
+      const note = details[label];
+      return note ? `• ${label} : ${note}` : `• ${label}`;
+    }).join('\n');
+    
     emailjs.send("service_jwd5z88", "template_i3r7i8i", {
       date:      dateFmt,
       heure:     timeFmt,
-      activites: selectedActivities.join(', ')
+      activites: selectedActivities.join(', '),
+      details:   detailsEmail
     }).catch(err => console.warn('EmailJS error:', err));
 
     // Confettis
