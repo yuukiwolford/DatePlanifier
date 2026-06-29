@@ -32,9 +32,14 @@
     </button>
   </div>
 
-  <button class="continue-btn" id="continue-activities" onclick="confirmActivities()">
-    Confirmer la mission →
+  <div style="display:flex; flex-direction:column; align-items:center; gap:0.8rem; margin-top:2rem;">
+  <button class="continue-btn visible" id="btn-details" onclick="goToDetails()" style="margin-top:0; background: linear-gradient(135deg, var(--saber-blue), #0288D1);">
+    📝 Préciser mes envies
   </button>
+  <button class="continue-btn" id="continue-activities" onclick="confirmActivities()" style="margin-top:0; font-size:0.8rem; padding:0.7rem 2rem; opacity:0.7;">
+    Passer directement à la date →
+  </button>
+</div>
 </div>
 <nav class="nav-band">
   <a class="nav-step done" href="index.html"><span class="nav-step-icon">🌌</span>Accueil</a>
@@ -131,8 +136,11 @@
   }
 
   function updateContinueBtn() {
-    const btn = document.getElementById('continue-activities');
-    btn.classList.toggle('visible', selectedActivities.length > 0);
+    const btnDetails = document.getElementById('btn-details');
+    const btnSkip    = document.getElementById('continue-activities');
+    const hasSelection = selectedActivities.length > 0;
+    btnDetails.classList.toggle('visible', hasSelection);
+    btnSkip.classList.toggle('visible', hasSelection);
   }
 
   function addCustomActivity() {
@@ -163,9 +171,13 @@
   }
 
   function confirmActivities() {
-    // Sauvegarde dans localStorage avant de changer de page
     localStorage.setItem('sw_activities', JSON.stringify(selectedActivities));
     navigateTo('date.html');
+  }
+
+  function goToDetails() {
+    localStorage.setItem('sw_activities', JSON.stringify(selectedActivities));
+    navigateTo('details.html');
   }
 
   // Init
