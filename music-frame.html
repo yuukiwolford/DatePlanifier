@@ -9,24 +9,19 @@
     const music = document.getElementById('music');
     music.volume = 0.4;
 
-    // Reprend à la bonne position
     const savedTime = parseFloat(sessionStorage.getItem('sw_music_time') || '0');
     music.currentTime = savedTime;
 
-    // Sauvegarde la position toutes les secondes
     setInterval(() => {
-      if (!music.paused) {
-        sessionStorage.setItem('sw_music_time', music.currentTime);
-      }
+      if (!music.paused) sessionStorage.setItem('sw_music_time', music.currentTime);
     }, 1000);
 
-    window.addEventListener('message', e => {
-      if (e.data === 'play') music.play().catch(() => {});
-      if (e.data === 'pause') music.pause();
+    music.play().catch(() => {
+      // Fallback : attend un click sur la page parente
+      window.addEventListener('message', e => {
+        if (e.data === 'play') music.play().catch(() => {});
+      });
     });
-
-    // Démarre automatiquement si déjà en lecture
-    music.play().catch(() => {});
   </script>
 </body>
 </html>
