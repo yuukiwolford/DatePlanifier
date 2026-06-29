@@ -78,7 +78,11 @@
     const endDate = new Date(dateObj.getTime() + 3 * 60 * 60 * 1000);
     const endDT   = endDate.toISOString().replace(/[-:]/g, '').split('.')[0];
     const title   = encodeURIComponent('Notre Date Galactique');
-    const det     = encodeURIComponent('Activites : ' + selectedActivities.join(', '));
+    const detailsText = selectedActivities.map(label => {
+      const note = details[label];
+      return note ? `${label} : ${note}` : label;
+    }).join('\n');
+    const det = encodeURIComponent(detailsText);
     const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDT}/${endDT}&details=${det}`;
 
     document.getElementById('gcal-link').href = gcalUrl;
