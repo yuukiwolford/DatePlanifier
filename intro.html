@@ -38,7 +38,19 @@
   <button class="skip-btn" onclick="navigateTo('yesno.html')">PASSER ›</button>
   <button class="next-btn" id="next-btn" onclick="navigateTo('yesno.html')">SUIVANT ›</button>
 </div>
-
+<nav class="nav-band">
+  <a class="nav-step done" href="index.html"><span class="nav-step-icon">🌌</span>Accueil</a>
+  <div class="nav-separator"></div>
+  <span class="nav-step active"><span class="nav-step-icon">🎬</span>Intro</span>
+  <div class="nav-separator"></div>
+  <span class="nav-step locked"><span class="nav-step-icon">💚</span>Mission</span>
+  <div class="nav-separator"></div>
+  <span class="nav-step locked"><span class="nav-step-icon">🎯</span>Activités</span>
+  <div class="nav-separator"></div>
+  <span class="nav-step locked"><span class="nav-step-icon">📅</span>Date</span>
+  <div class="nav-separator"></div>
+  <span class="nav-step locked"><span class="nav-step-icon">🎉</span>Confirm</span>
+</nav>
 <script src="script.js"></script>
 <script>
   document.getElementById('crawl-text').addEventListener('animationend', () => {
