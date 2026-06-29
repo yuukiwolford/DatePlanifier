@@ -655,9 +655,15 @@ body {
 /* ============================================================
    SCROLLBAR
    ============================================================ */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--saber-blue); border-radius: 3px; }
+/* Après */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 4px; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--saber-blue), var(--saber-pink));
+  border-radius: 4px;
+  box-shadow: 0 0 6px var(--saber-blue);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
 /* ============================================================
    CALENDRIER
@@ -786,3 +792,74 @@ body {
   gap: 1.5rem;
   backdrop-filter: blur(10px);
 }
+
+/* ============================================================
+   BANDEAU DE NAVIGATION
+   ============================================================ */
+.nav-band {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  background: rgba(10, 10, 26, 0.85);
+  border-top: 1px solid rgba(79, 195, 247, 0.2);
+  backdrop-filter: blur(12px);
+}
+
+.nav-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.3s;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  min-width: 60px;
+  text-align: center;
+}
+
+.nav-step:hover {
+  color: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.05);
+}
+
+.nav-step.active {
+  color: var(--gold);
+  border-color: rgba(255, 232, 31, 0.3);
+  background: rgba(255, 232, 31, 0.07);
+}
+
+.nav-step.done {
+  color: var(--saber-green);
+}
+
+.nav-step.locked {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.nav-step-icon { font-size: 1.1rem; }
+
+.nav-separator {
+  width: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(79,195,247,0.1), rgba(79,195,247,0.4), rgba(79,195,247,0.1));
+  flex-shrink: 0;
+}
+
+/* Compense la hauteur du bandeau sur les pages scrollables */
+#page-activities { padding-bottom: 80px; }
