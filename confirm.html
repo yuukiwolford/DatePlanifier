@@ -40,67 +40,67 @@
 <script>emailjs.init("ce8RYaio3azsyABRj");</script>
 <script src="script.js"></script>
 <script>
-  // Récupère les données depuis localStorage
   const selectedActivities = JSON.parse(localStorage.getItem('sw_activities') || '[]');
+  const details            = JSON.parse(localStorage.getItem('sw_details')    || '{}');
   const dateStr            = localStorage.getItem('sw_date');
   const timeStr            = localStorage.getItem('sw_time') || '14:00';
 
   if (!dateStr) {
-    // Si on arrive ici sans données, retour au début
     window.location.href = 'index.html';
   } else {
     buildConfirmPage(dateStr, timeStr);
   }
 
   function buildConfirmPage(dateStr, timeStr) {
-    const [y, m, d]  = dateStr.split('-').map(Number);
-    const dateObj    = new Date(y, m - 1, d);
-    const options    = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const dateFmt    = dateObj.toLocaleDateString('fr-FR', options);
-    const [h, min]   = timeStr.split(':');
-    const timeFmt    = `${h}h${min}`;
-    const details = JSON.parse(localStorage.getItem('sw_details') || '{}');
-    
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const dateObj   = new Date(y, m - 1, d);
+    const options   = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const dateFmt   = dateObj.toLocaleDateString('fr-FR', options);
+    const [h, min]  = timeStr.split(':');
+    const timeFmt   = `${h}h${min}`;
+
+    const activitesHTML = selectedActivities.map(label => {
+      const note = details[label] || '';
+      return `<div class="confirm-detail" style="padding-left:1rem; color:#aaa; margin-top:0.3rem;">
+        • ${label}${note ? `<br><span style="font-size:0.8rem; color:var(--saber-blue); padding-left:1rem;">↳ ${note}</span>` : ''}
+      </div>`;
+    }).join('');
+
     document.getElementById('confirm-summary').innerHTML = `
       <div class="confirm-detail">📅 <strong>DATE :</strong> ${dateFmt}</div>
       <div class="confirm-detail">⏰ <strong>HEURE :</strong> ${timeFmt}</div>
       <div class="confirm-detail" style="margin-top:0.5rem;">🎯 <strong>ACTIVITÉS :</strong></div>
-      ${selectedActivities.map(label => {
-        const note = details[label];
-        return `<div class="confirm-detail" style="padding-left:1rem; color:#aaa;">
-          • ${label}${note ? `<br><span style="font-size:0.8rem; color:var(--saber-blue); padding-left:1rem;">↳ ${note}</span>` : ''}
-        </div>`;
-      }).join('')}
+      ${activitesHTML || '<div style="padding-left:1rem;color:#aaa;">• Aucune</div>'}
     `;
 
-    // Lien Google Agenda
+    // Google Agenda
     const startDT = dateStr.replace(/-/g, '') + 'T' + timeStr.replace(':', '') + '00';
     const endDate = new Date(dateObj.getTime() + 3 * 60 * 60 * 1000);
     const endDT   = endDate.toISOString().replace(/[-:]/g, '').split('.')[0];
     const title   = encodeURIComponent('Notre Date Galactique');
-    const details = encodeURIComponent('Activites : ' + selectedActivities.join(', '));
-    const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDT}/${endDT}&details=${details}`;
+    const det     = encodeURIComponent('Activites : ' + selectedActivities.join(', '));
+    const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDT}/${endDT}&details=${det}`;
 
-    const gcalBtn = document.getElementById('gcal-link');
-    gcalBtn.href    = gcalUrl;
-    gcalBtn.onclick = e => { e.preventDefault(); window.open(gcalUrl, '_blank'); };
+    document.getElementById('gcal-link').href = gcalUrl;
 
     // Email
     emailjs.send("service_jwd5z88", "template_i3r7i8i", {
       date:      dateFmt,
       heure:     timeFmt,
       activites: selectedActivities.join(', ')
-    });
+    }).catch(err => console.warn('EmailJS error:', err));
 
     // Confettis
     for (let i = 0; i < 30; i++) setTimeout(() => spawnParticle(), i * 80);
 
-    // Nettoie le localStorage après confirmation
-    localStorage.removeItem('sw_activities');
-    localStorage.removeItem('sw_custom_activities');
-    localStorage.removeItem('sw_date');
-    localStorage.removeItem('sw_time');
-    localStorage.removeItem('sw_details');
+    // Nettoyage différé — après affichage
+    setTimeout(() => {
+      localStorage.removeItem('sw_activities');
+      localStorage.removeItem('sw_custom_activities');
+      localStorage.removeItem('sw_details');
+      localStorage.removeItem('sw_date');
+      localStorage.removeItem('sw_time');
+    }, 3000);
   }
 </script>
 </body>
