@@ -38,11 +38,11 @@
 <script src="script.js"></script>
 <script>
   function launchSite() {
-    const music = document.getElementById('sw-music');
-    music.volume = 0.4;
-    music.play();
-    navigateTo('intro.html');
-  }
+  const frame = document.getElementById('music-frame');
+  frame.contentWindow.postMessage('play', '*');
+  sessionStorage.setItem('sw_music_playing', '1');
+  navigateTo('intro.html');
+}
 </script>
 </body>
 </html>
