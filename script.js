@@ -24,10 +24,23 @@ for (let i = 0; i < 200; i++) {
 function navigateTo(url) {
   const overlay = document.getElementById('hyperspace');
   overlay.classList.add('flash');
+  // Sauvegarde le timestamp de lecture pour simuler la continuité
+  const music = document.getElementById('sw-music');
+  if (music) localStorage.setItem('sw_music_time', music.currentTime);
   setTimeout(() => {
     window.location.href = url;
   }, 400);
 }
+
+// Reprend la musique là où elle s'était arrêtée
+window.addEventListener('load', () => {
+  const music = document.getElementById('sw-music');
+  if (!music) return;
+  const savedTime = parseFloat(localStorage.getItem('sw_music_time') || '0');
+  music.currentTime = savedTime;
+  music.volume = 0.4;
+  music.play().catch(() => {}); // silencieux si bloqué
+});
 
 /* ============================================================
    PARTICULES
