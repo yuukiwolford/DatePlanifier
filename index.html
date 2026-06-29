@@ -37,10 +37,11 @@
 </nav>
 <script src="script.js"></script>
 <script>
-  function launchSite() {
+function launchSite() {
+  sessionStorage.setItem('sw_music_playing', '1');
+  sessionStorage.setItem('sw_music_time', '0');
   const frame = document.getElementById('music-frame');
   frame.contentWindow.postMessage('play', '*');
-  sessionStorage.setItem('sw_music_playing', '1');
   navigateTo('intro.html');
 }
 </script>
