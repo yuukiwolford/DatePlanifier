@@ -255,7 +255,7 @@ function initCalendar() {
     .then(r => r.json())
     .then(data => { reservedDates = data.reserved || []; })
     .catch(() => { reservedDates = []; })
-    .finally(() => renderCalendar());
+    .then(() => renderCalendar());
 }
 
 function renderCalendar() {
