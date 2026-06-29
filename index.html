@@ -110,19 +110,28 @@
 </div>
 
 <!-- ======================== PAGE 4: DATE PICKER ======================== -->
+<!-- ======================== PAGE 4: DATE PICKER ======================== -->
 <div class="page" id="page-date">
   <div class="date-title">Quand se déroule cette mission ? 📅</div>
   <div class="date-sub">"Le moment propice, il faut choisir." – Yoda</div>
   <div class="saber-divider"></div>
+
   <div class="date-form">
-    <div class="form-group">
-      <label>📅 DATE DE LA MISSION</label>
-      <input type="date" id="date-input" min="2025-07-20" max="2025-08-31">
+    <!-- Calendrier custom -->
+    <div class="calendar-header">
+      <button class="cal-nav" id="cal-prev">‹</button>
+      <span class="cal-month-label" id="cal-month-label"></span>
+      <button class="cal-nav" id="cal-next">›</button>
     </div>
-    <div class="form-group">
+    <div class="calendar-grid" id="calendar-grid"></div>
+
+    <div class="form-group" style="margin-top:1rem;">
       <label>⏰ HEURE DU RENDEZ-VOUS</label>
       <input type="time" id="time-input" value="14:00">
     </div>
+
+    <div id="selected-date-display" class="selected-date-display" style="display:none;"></div>
+
     <button class="continue-btn visible" onclick="validateDate()" style="margin-top:0;">
       Activer l'hyperdrive →
     </button>
