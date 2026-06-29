@@ -541,7 +541,7 @@ body {
   border-radius: 20px;
   padding: 2rem;
   width: 100%;
-  max-width: 420px;
+  max-width: 680px;   /* ← était 420px */
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -713,11 +713,22 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  font-size: 0.85rem;
+  font-size: 1rem;       /* ← était 0.85rem */
   cursor: pointer;
   transition: all 0.2s;
   border: 1px solid transparent;
   font-family: 'Exo 2', sans-serif;
+  min-width: 36px;       /* ← ajoute ça */
+  min-height: 36px;      /* ← ajoute ça */
+}
+
+.cal-day-name {
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.7rem;     /* ← était 0.6rem */
+  color: var(--saber-blue);
+  padding: 6px 0;        /* ← était 4px */
+  letter-spacing: 1px;
 }
 
 .cal-day:hover:not(.disabled):not(.empty) {
