@@ -226,7 +226,7 @@ body {
 
 @keyframes crawl {
   0%   { transform: rotateX(25deg) translateY(100%); }
-  100% { transform: rotateX(25deg) translateY(-180%); }
+  100% { transform: rotateX(25deg) translateY(-150%); }
 }
 
 .crawl-title {
