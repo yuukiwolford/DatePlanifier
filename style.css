@@ -91,7 +91,7 @@ body {
    ============================================================ */
 .next-btn {
   position: fixed;
-  bottom: 10rem;
+  bottom: 5rem;
   left: 2rem;
   background: linear-gradient(135deg, var(--gold), #E6A800);
   color: #000;
@@ -122,7 +122,7 @@ body {
 
 .skip-btn {
   position: fixed;
-  bottom: 10rem;
+  bottom: 5rem;
   right: 2rem;
   background: rgba(255,232,31,0.15);
   border: 1px solid var(--gold);
