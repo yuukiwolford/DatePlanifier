@@ -655,16 +655,51 @@ body {
 /* ============================================================
    SCROLLBAR
    ============================================================ */
-/* Après */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 4px; }
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, var(--saber-blue), var(--saber-pink));
-  border-radius: 4px;
-  box-shadow: 0 0 6px var(--saber-blue);
-}
-::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+::-webkit-scrollbar { width: 12px; }
 
+::-webkit-scrollbar-track {
+  background: rgba(10, 10, 26, 0.9);
+  border-radius: 6px;
+  border: 1px solid rgba(79, 195, 247, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.9) 0%,
+    var(--saber-blue) 8%,
+    var(--saber-pink) 50%,
+    var(--saber-blue) 92%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  box-shadow:
+    0 0 6px var(--saber-blue),
+    0 0 12px var(--saber-blue),
+    0 0 20px rgba(79, 195, 247, 0.5),
+    inset 0 0 4px rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 1) 0%,
+    var(--saber-green) 8%,
+    var(--gold) 50%,
+    var(--saber-green) 92%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  box-shadow:
+    0 0 8px var(--saber-green),
+    0 0 20px var(--saber-green),
+    0 0 35px rgba(105, 240, 174, 0.6),
+    inset 0 0 6px rgba(255, 255, 255, 0.5);
+}
+
+::-webkit-scrollbar-track-piece:start {
+  background: transparent;
+}
 /* ============================================================
    CALENDRIER
    ============================================================ */
