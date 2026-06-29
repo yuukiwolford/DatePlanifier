@@ -60,7 +60,7 @@
   const savedTime = localStorage.getItem('sw_time');
   if (savedTime) document.getElementById('time-input').value = savedTime;
 
-  fetch('dates.json')
+  fetch('dates.json?v=' + Date.now())
     .then(r => r.json())
     .then(data => { reservedDates = data.reserved || []; })
     .catch(() => { reservedDates = []; })
