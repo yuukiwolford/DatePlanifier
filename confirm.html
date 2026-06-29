@@ -57,11 +57,18 @@
     const dateFmt    = dateObj.toLocaleDateString('fr-FR', options);
     const [h, min]   = timeStr.split(':');
     const timeFmt    = `${h}h${min}`;
-
+    const details = JSON.parse(localStorage.getItem('sw_details') || '{}');
+    
     document.getElementById('confirm-summary').innerHTML = `
       <div class="confirm-detail">📅 <strong>DATE :</strong> ${dateFmt}</div>
       <div class="confirm-detail">⏰ <strong>HEURE :</strong> ${timeFmt}</div>
-      <div class="confirm-detail">🎯 <strong>ACTIVITÉS :</strong> ${selectedActivities.join(', ') || 'Aucune'}</div>
+      <div class="confirm-detail" style="margin-top:0.5rem;">🎯 <strong>ACTIVITÉS :</strong></div>
+      ${selectedActivities.map(label => {
+        const note = details[label];
+        return `<div class="confirm-detail" style="padding-left:1rem; color:#aaa;">
+          • ${label}${note ? `<br><span style="font-size:0.8rem; color:var(--saber-blue); padding-left:1rem;">↳ ${note}</span>` : ''}
+        </div>`;
+      }).join('')}
     `;
 
     // Lien Google Agenda
