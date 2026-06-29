@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Détails de la mission 📝</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .details-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1rem, 3vw, 1.6rem);
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 0.3rem;
+    }
+
+    .details-sub {
+      text-align: center;
+      color: var(--saber-blue);
+      font-style: italic;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .details-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .detail-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(79,195,247,0.2);
+      border-radius: 18px;
+      padding: 1.2rem 1.5rem;
+      transition: border-color 0.3s;
+    }
+
+    .detail-card:focus-within {
+      border-color: var(--saber-pink);
+      box-shadow: 0 0 15px rgba(255,110,199,0.2);
+    }
+
+    .detail-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .detail-card-emoji {
+      font-size: 1.8rem;
+    }
+
+    .detail-card-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+    }
+
+    .detail-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,110,199,0.3);
+      border-radius: 12px;
+      color: var(--star-white);
+      font-size: 0.95rem;
+      font-family: 'Exo 2', sans-serif;
+      resize: none;
+      transition: all 0.3s;
+      min-height: 70px;
+    }
+
+    .detail-input::placeholder {
+      color: rgba(255,255,255,0.25);
+      font-style: italic;
+    }
+
+    .detail-input:focus {
+      outline: none;
+      border-color: var(--saber-pink);
+      background: rgba(255,110,199,0.08);
+      box-shadow: 0 0 12px rgba(255,110,199,0.2);
+    }
+
+    .char-count {
+      text-align: right;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.25);
+      margin-top: 0.3rem;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .detail-filled .detail-card-label::after {
+      content: ' ✓';
+      color: var(--saber-green);
+    }
+
+    .btn-area-details {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-skip {
+      padding: 0.8rem 2rem;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50px;
+      color: rgba(255,255,255,0.4);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-skip:hover {
+      border-color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.7);
+    }
+
+    .progress-bar-wrap {
+      width: 100%;
+      max-width: 600px;
+      height: 3px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--saber-blue), var(--saber-pink));
+      border-radius: 2px;
+      box-shadow: 0 0 8px var(--saber-pink);
+      transition: width 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+
+<div id="stars-container"></div>
+<div class="hyperspace-overlay" id="hyperspace"></div>
+
+<div class="page active" id="page-details">
+  <div class="details-title">Précise ta mission, Padawan 📝</div>
+  <div class="details-sub">Optionnel — dis-nous ce que tu as en tête pour chaque activité</div>
+  <div class="saber-divider"></div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+
+  <div class="details-list" id="details-list"></div>
+
+  <div class="btn-area-details">
+    <button class="btn-skip" onclick="saveAndContinue(true)">Passer →</button>
+    <button class="continue-btn visible" onclick="saveAndContinue(false)" style="margin-top:0;">
+      Confirmer les détails ✨
+    </button>
+  </div>
+</div>
+
+<nav class="nav-band">
+  <a class="nav-step done" href="index.html"><span class="nav-step-icon">🌌</span>Accueil</a>
+  <div class="nav-separator"></div>
+  <a class="nav-step done" href="intro.html"><span class="nav-step-icon">🎬</span>Intro</a>
+  <div class="nav-separator"></div>
+  <a class="nav-step done" href="yesno.html"><span class="nav-step-icon">💚</span>Mission</a>
+  <div class="nav-separator"></div>
+  <a class="nav-step done" href="activities.html"><span class="nav-step-icon">🎯</span>Activités</a>
+  <div class="nav-separator"></div>
+  <span class="nav-step active"><span class="nav-step-icon">📝</span>Détails</span>
+  <div class="nav-separator"></div>
+  <span class="nav-step locked"><span class="nav-step-icon">📅</span>Date</span>
+  <div class="nav-separator"></div>
+  <span class="nav-step locked"><span class="nav-step-icon">🎉</span>Confirm</span>
+</nav>
+
+<script src="script.js"></script>
+<script>
+  const activities = JSON.parse(localStorage.getItem('sw_activities') || '[]');
+
+  // Map emoji par label (reprend la même liste que activities.html)
+  const emojiMap = {
+    'Ciné': '🎬', 'Restaurant': '🍕', "Parc d'attraction": '🎢',
+    'Pique-nique': '🌳', 'Spectacle': '🎭', 'Jeux vidéo': '🎮',
+    'Musée': '🏛️', 'Glaces': '🍦', 'Aventure': '🚵',
+    'Pâtisserie': '🧁', 'Balade en ville': '🌆', 'Fête foraine': '🎠',
+    'Bowling': '🎳', 'Atelier créatif': '🎨', 'Coucher de soleil': '🌅',
+    'Concert': '🎵', 'Bateau': '🛶', 'Food tour': '🌮',
+  };
+
+  // Récupère aussi les emojis custom
+  const customActivities = JSON.parse(localStorage.getItem('sw_custom_activities') || '[]');
+  customActivities.forEach(a => { emojiMap[a.label] = a.emoji; });
+
+  // Placeholder contextuel par activité
+  const placeholders = {
+    'Ciné':             'Quel film tu voudrais voir ? Un genre en particulier ?',
+    'Restaurant':       'Un type de cuisine ? Une adresse en tête ?',
+    "Parc d'attraction":'Lequel ? Une attraction que tu veux absolument faire ?',
+    'Pique-nique':      'Où ? Un parc, une forêt, au bord de l\'eau ?',
+    'Spectacle':        'Quel type de spectacle ? Théâtre, comédie, magie ?',
+    'Jeux vidéo':       'Un jeu en particulier ? Coop ou versus ?',
+    'Musée':            'Un musée ou une expo qui t\'intéresse ?',
+    'Glaces':           'Un parfum, une adresse, une envie particulière ?',
+    'Aventure':         'Quel type ? Escalade, accrobranche, randonnée ?',
+    'Pâtisserie':       'Un gâteau, une pâtisserie particulière à tester ?',
+    'Balade en ville':  'Un quartier, une rue, un endroit à découvrir ?',
+    'Fête foraine':     'Un manège que tu veux tenter absolument ?',
+    'Bowling':          'Un bowling en particulier ? Mode compétition ou détente ?',
+    'Atelier créatif':  'Quel atelier ? Poterie, peinture, bijoux ?',
+    'Coucher de soleil':'Un endroit idéal pour le regarder ?',
+    'Concert':          'Un artiste, un style de musique ?',
+    'Bateau':           'Un lac, une rivière, la mer ? Type de bateau ?',
+    'Food tour':        'Une cuisine en particulier ? Un quartier ?',
+  };
+
+  // Charge les détails déjà saisis si retour en arrière
+  const savedDetails = JSON.parse(localStorage.getItem('sw_details') || '{}');
+
+  if (activities.length === 0) {
+    navigateTo('activities.html');
+  }
+
+  const list = document.getElementById('details-list');
+
+  activities.forEach(label => {
+    const emoji = emojiMap[label] || '⭐';
+    const placeholder = placeholders[label] || 'Des précisions, une envie particulière ?';
+    const savedValue = savedDetails[label] || '';
+
+    const card = document.createElement('div');
+    card.className = 'detail-card' + (savedValue ? ' detail-filled' : '');
+    card.innerHTML = `
+      <div class="detail-card-header">
+        <span class="detail-card-emoji">${emoji}</span>
+        <span class="detail-card-label">${label.toUpperCase()}</span>
+      </div>
+      <textarea
+        class="detail-input"
+        id="detail-${label}"
+        placeholder="${placeholder}"
+        maxlength="200"
+      >${savedValue}</textarea>
+      <div class="char-count" id="count-${label}">${savedValue.length}/200</div>
+    `;
+
+    const textarea = card.querySelector('textarea');
+    const counter  = card.querySelector('.char-count');
+
+    textarea.addEventListener('input', () => {
+      counter.textContent = textarea.value.length + '/200';
+      card.classList.toggle('detail-filled', textarea.value.trim().length > 0);
+      updateProgress();
+    });
+
+    list.appendChild(card);
+  });
+
+  function updateProgress() {
+    const filled = activities.filter(label => {
+      const el = document.getElementById('detail-' + label);
+      return el && el.value.trim().length > 0;
+    }).length;
+    const pct = activities.length > 0 ? (filled / activities.length) * 100 : 0;
+    document.getElementById('progress-fill').style.width = pct + '%';
+  }
+
+  updateProgress();
+
+  function saveAndContinue(skip) {
+    if (!skip) {
+      const details = {};
+      activities.forEach(label => {
+        const el = document.getElementById('detail-' + label);
+        if (el) details[label] = el.value.trim();
+      });
+      localStorage.setItem('sw_details', JSON.stringify(details));
+    }
+    navigateTo('date.html');
+  }
+</script>
+</body>
+</html>
