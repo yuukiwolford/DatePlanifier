@@ -242,14 +242,110 @@ function addCustomActivity() {
 /* ============================================================
    VALIDATION DATE
    ============================================================ */
+/* ============================================================
+   CALENDRIER
+   ============================================================ */
+let reservedDates = [];
+let currentCalDate = new Date();
+let selectedDateStr = null;
+
+// Charge les dates réservées depuis dates.json puis ouvre le calendrier
+function initCalendar() {
+  fetch('dates.json')
+    .then(r => r.json())
+    .then(data => { reservedDates = data.reserved || []; })
+    .catch(() => { reservedDates = []; })
+    .finally(() => renderCalendar());
+}
+
+function renderCalendar() {
+  const grid  = document.getElementById('calendar-grid');
+  const label = document.getElementById('cal-month-label');
+  grid.innerHTML = '';
+
+  const year  = currentCalDate.getFullYear();
+  const month = currentCalDate.getMonth();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  label.textContent = new Date(year, month).toLocaleDateString('fr-FR', {
+    month: 'long', year: 'numeric'
+  });
+
+  // En-têtes jours
+  ['LUN','MAR','MER','JEU','VEN','SAM','DIM'].forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-day-name';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  // Décalage : 1er jour du mois (lundi = 0)
+  const firstDay = new Date(year, month, 1).getDay();
+  const offset   = (firstDay === 0) ? 6 : firstDay - 1;
+  for (let i = 0; i < offset; i++) {
+    const empty = document.createElement('div');
+    empty.className = 'cal-day empty';
+    grid.appendChild(empty);
+  }
+
+  // Jours
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  for (let d = 1; d <= daysInMonth; d++) {
+    const el      = document.createElement('div');
+    el.className  = 'cal-day';
+    el.textContent = d;
+
+    const dateStr = `${year}-${String(month + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dateObj = new Date(year, month, d);
+
+    if (dateObj < today) {
+      el.classList.add('past');
+    } else if (reservedDates.includes(dateStr)) {
+      el.classList.add('disabled');
+      el.title = 'Date déjà réservée 🚫';
+    } else {
+      el.addEventListener('click', () => selectDate(dateStr, d, month, year, el));
+    }
+
+    if (dateObj.toDateString() === today.toDateString()) el.classList.add('today');
+    if (dateStr === selectedDateStr) el.classList.add('selected');
+
+    grid.appendChild(el);
+  }
+}
+
+function selectDate(dateStr, d, month, year, el) {
+  selectedDateStr = dateStr;
+  document.querySelectorAll('.cal-day.selected').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+
+  const label = new Date(year, month, d).toLocaleDateString('fr-FR', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+  });
+  const display = document.getElementById('selected-date-display');
+  display.textContent = '📅 ' + label;
+  display.style.display = 'block';
+}
+
+// Navigation mois
+document.getElementById('cal-prev').addEventListener('click', () => {
+  currentCalDate.setMonth(currentCalDate.getMonth() - 1);
+  renderCalendar();
+});
+document.getElementById('cal-next').addEventListener('click', () => {
+  currentCalDate.setMonth(currentCalDate.getMonth() + 1);
+  renderCalendar();
+});
+
+/* ============================================================
+   VALIDATION DATE
+   ============================================================ */
 function validateDate() {
-  const dateInput = document.getElementById('date-input').value;
   const timeInput = document.getElementById('time-input').value;
-
-  if (!dateInput) { alert('Choisis une date, jeune Padawan ! 📅'); return; }
-  if (!timeInput) { alert("L'heure de la mission est manquante ! ⏰"); return; }
-
-  buildConfirmPage(dateInput, timeInput);
+  if (!selectedDateStr) { alert('Choisis une date, jeune Padawan ! 📅'); return; }
+  if (!timeInput)       { alert("L'heure de la mission est manquante ! ⏰"); return; }
+  buildConfirmPage(selectedDateStr, timeInput);
   goToPage('page-confirm');
 }
 
