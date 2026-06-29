@@ -46,16 +46,28 @@ function spawnParticle() {
 
 /* MUSIQUE PERSISTANTE */
 (function() {
-  if (!document.getElementById('music-frame') &&
-       sessionStorage.getItem('sw_music_playing') === '1') {
-    const frame = document.createElement('iframe');
-    frame.id  = 'music-frame';
-    frame.src = 'music-frame.html';
-    frame.style.cssText = 'display:none;width:0;height:0;border:none;';
-    frame.allow = 'autoplay';
-    frame.onload = () => {
-      frame.contentWindow.postMessage('play', '*');
-    };
-    document.body.appendChild(frame);
-  }
+  if (sessionStorage.getItem('sw_music_playing') !== '1') return;
+  if (document.getElementById('music-frame')) return;
+
+  const frame = document.createElement('iframe');
+  frame.id  = 'music-frame';
+  frame.src = 'music-frame.html';
+  frame.style.cssText = 'display:none;width:0;height:0;border:none;position:fixed;';
+  frame.allow = 'autoplay';
+  document.body.appendChild(frame);
+
+  // Tente de lancer via interaction utilisateur dès le premier click
+  const unlock = () => {
+    frame.contentWindow.postMessage('play', '*');
+    document.removeEventListener('click', unlock);
+    document.removeEventListener('touchstart', unlock);
+  };
+
+  frame.onload = () => {
+    // Premier essai direct
+    frame.contentWindow.postMessage('play', '*');
+    // Fallback sur interaction
+    document.addEventListener('click', unlock);
+    document.addEventListener('touchstart', unlock);
+  };
 })();
